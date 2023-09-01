@@ -285,6 +285,8 @@ class ModelClass(nn.Module):
         batch._inc_dict["x"] = torch.zeros(self.batch_size, device=device)
         batch._inc_dict["xnot"] = torch.zeros(self.batch_size, device=device)
         batch.num_nodes = len(batch.x)
+        batch.n_pointsv = num_vec
+        batch.n_multihit = torch.zeros_like(num_vec)
 
         assert (
             len(batch.x) + len(batch.xnot) == self.output_points * self.batch_size

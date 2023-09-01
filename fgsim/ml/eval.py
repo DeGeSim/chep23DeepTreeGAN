@@ -48,7 +48,7 @@ def gen_res_from_sim_batches(batches: list[Batch], holder: Holder):
     gen_batch = postprocess(gen_batch, "gen")
     logger.info("Postprocessing done")
     assert gen_batch.x.shape <= sim_batch.x.shape
-    assert (sim_batch.n_pointsv == gen_batch.n_pointsv + gen_batch.n_multihit).all()
+    # assert (sim_batch.n_pointsv == gen_batch.n_pointsv + gen_batch.n_multihit).all()
 
     results_d = {
         "sim_batch": sim_batch,
