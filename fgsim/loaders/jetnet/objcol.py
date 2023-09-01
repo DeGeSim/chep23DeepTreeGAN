@@ -4,6 +4,7 @@ from typing import List, Tuple
 import torch
 from jetnet.datasets import JetNet
 from sklearn.preprocessing import PowerTransformer, StandardScaler
+from sklearn.preprocessing import FunctionTransformer
 from torch_geometric.data import Data
 
 from fgsim.config import conf
@@ -64,13 +65,28 @@ def contruct_graph_from_row(chk: Tuple[torch.Tensor, torch.Tensor]) -> Data:
     return res
 
 
+def Identity(x):
+    return x
+
+
+def DummyTransformer():
+    return FunctionTransformer(Identity, Identity)
+
+
 scaler = ScalerBase(
     files=file_manager.files,
     len_dict=file_manager.file_len_dict,
-    transfs=[
+    transfs_x=[
         StandardScaler(),
         StandardScaler(),
         PowerTransformer(method="box-cox", standardize=True),
+    ],
+    transfs_y=[
+        DummyTransformer(),  # type
+        DummyTransformer(),  # pt
+        DummyTransformer(),  # eta
+        DummyTransformer(),  # mass
+        DummyTransformer(),  # num_particles
     ],
     read_chunk=read_chunks,
     transform_wo_scaling=contruct_graph_from_row,
