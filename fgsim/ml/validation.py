@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from fgsim.ml.holder import Holder
 from fgsim.monitoring import logger
-from fgsim.utils.check_for_nans import check_chain_for_nans
+from fgsim.utils.check_model import check_chain_for_nans
 
 from .eval import eval_res_d, gen_res_from_sim_batches
 

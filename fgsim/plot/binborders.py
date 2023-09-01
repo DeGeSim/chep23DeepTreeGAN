@@ -1,9 +1,6 @@
 import numpy as np
 
-from fgsim.utils.torchtonp import wrap_torch_to_np
 
-
-@wrap_torch_to_np
 def binborders_wo_outliers(points: np.ndarray, bins=50) -> np.ndarray:
     assert len(points.shape) == 1
     if len(np.unique(points[:500])) < 50:
@@ -19,7 +16,6 @@ def bincenters(bins: np.ndarray) -> np.ndarray:
     return (bins[1:] + bins[:-1]) / 2
 
 
-@wrap_torch_to_np
 def bounds_wo_outliers(points: np.ndarray) -> tuple:
     median = np.median(points, axis=0)
 

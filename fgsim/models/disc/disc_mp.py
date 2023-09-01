@@ -1,8 +1,8 @@
 import torch
 from torch import Tensor
 
+from fgsim.datasets.jetnet.utils import to_stacked_mask
 from fgsim.models.common.mpgan import LinearNet, MPNet
-from fgsim.utils.jetnetutils import to_stacked_mask
 
 
 class ModelClass(MPNet):

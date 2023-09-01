@@ -6,12 +6,9 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from fgsim.utils.torchtonp import wrap_torch_to_np
-
 from .binborders import binborders_wo_outliers, bincenters
 
 
-@wrap_torch_to_np
 def ratioplot(
     sim: np.ndarray,
     gen: np.ndarray,
