@@ -12,7 +12,6 @@ import torch
 
 from fgsim.config import conf, device
 from fgsim.loaders.jetnet import JetNetDS as QueuedDataset
-
 from fgsim.ml.eval import eval_res_d, gen_res_from_sim_batches
 from fgsim.ml.holder import Holder
 from fgsim.monitoring import logger
@@ -50,7 +49,12 @@ def test_procedure() -> None:
             epoch = holder.state.epoch
 
         eval_res_d(
-            test_data.res_d, holder, step, epoch, ["test", best_or_last], plot_path
+            test_data.res_d,
+            holder,
+            step,
+            epoch,
+            [f"test_{best_or_last}"],
+            plot_path,
         )
         holder.train_log.flush()
 
@@ -58,7 +62,8 @@ def test_procedure() -> None:
 
 
 def get_testing_datasets(holder: Holder, best_or_last) -> TestDataset:
-    ds_path = Path(conf.path.run_path) / f"testdata_{best_or_last}.pt"
+    ds_path = Path(conf.path.run_path) / f"test_{best_or_last}" / "testdata.pt"
+    ds_path.parent.mkdir(exist_ok=True)
     test_data: TestDataset
     if best_or_last == "best":
         step = holder.state.best_step

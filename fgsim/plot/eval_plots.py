@@ -22,9 +22,8 @@ def eval_plots(fig_logger: FigLogger, res: dict):
 
     make_high_level_plots(res, fig_logger)
 
-    if conf.dataset_name == "jetnet":
-        fig_logger.prefixes[-1] = "jn"
-        make_jetnet_plots(res, fig_logger)
+    # if conf.dataset_name == "jetnet":
+    #     make_jetnet_plots(res, fig_logger)
 
     make_critics_plots(res, fig_logger)
 
@@ -49,6 +48,8 @@ def make_high_level_plots(res: dict, fig_logger: FigLogger) -> None:
     metrics = [e for e in conf.training.val.metrics if "marginal" not in e]
     metric_dict = {}
     for mname in metrics:
+        if mname not in res["sim_batch"]:
+            continue
         simobj = res["sim_batch"][mname]
         if isinstance(simobj, dict):
             for smname in simobj.keys():

@@ -67,10 +67,19 @@ def postprocess(batch: Batch, sim_or_gen: str) -> Batch:
         batch.y_scaled = batch.y.clone()
         batch.y = scaler.inverse_transform(batch.y, "y")
 
-    if len({"kpd", "fgd"} & set(conf.training.val.metrics)):
-        from fgsim.utils.jetnetutils import to_efp
+    if conf.dataset_name == "jetnet":
+        from jetnet.utils import jet_features
 
-        batch = to_efp(batch)
+        from fgsim.utils.jetnetutils import to_stacked_mask
+
+        if len({"kpd", "fgd"} & set(conf.training.val.metrics)):
+            from fgsim.utils.jetnetutils import to_efp
+
+            batch = to_efp(batch)
+        for k, v in jet_features(
+            to_stacked_mask(batch).cpu().numpy()[..., :3]
+        ).items():
+            batch[k] = v
 
     if conf.dataset_name == "calochallange":
         from fgsim.loaders.calochallange import postprocess

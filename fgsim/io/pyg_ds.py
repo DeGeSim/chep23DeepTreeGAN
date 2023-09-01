@@ -22,7 +22,7 @@ transfs = [
 ]
 
 
-def contruct_graph_from_row(arg) -> Data:
+def event_to_graph(arg) -> Data:
     x, y = arg
     x, y = x.clone(), y.clone()
     res = Data(
@@ -61,7 +61,7 @@ class PyGDS(InMemoryDataset):
         )
 
         data_list = [
-            contruct_graph_from_row(e)
+            event_to_graph(e)
             for e in tqdm(
                 zip(torch.Tensor(particle_data), torch.Tensor(jet_data)),
                 total=len(particle_data),

@@ -19,13 +19,10 @@ class TrainLog:
         # This code block is formatting the hyperparameters
         # for the experiment and creating a list of tags.
         self.state: DictConfig = state
-        default_log = (
-            conf.command in ["train", "test", "generate"] and not conf.debug
-        )
         if conf.command in ["test", "generate"]:
-            default_log = True
-        self.use_tb = default_log
-        self.use_wandb = default_log
+            pass
+        self.use_tb = False
+        self.use_wandb = False
 
         _epoch = self.state["epoch"]
         _step = self.state["grad_step"]
@@ -36,7 +33,6 @@ class TrainLog:
         if self.use_wandb:
             dstr = datetime.now().strftime("%y-%m-%d-%H:%M")
             logger.info(f"time/{conf.command}" + dstr)
-
 
     def log_metrics(
         self,
@@ -53,6 +49,7 @@ class TrainLog:
 
     def flush(self):
         pass
+
     #     if self.use_wandb:
     #         if len(self._wandb_tmp):
     #             logger.info("Wandb flush")
@@ -70,7 +67,6 @@ class TrainLog:
     #             self._wandb_step = None
     #             self._wandb_epoch = None
 
-    
     def log_figure(
         self,
         figure_name: str,
@@ -78,11 +74,11 @@ class TrainLog:
         step: int,
         epoch: int,
     ):
-        if self.use_tb:
-            self.writer.add_figure(tag=figure_name, figure=figure, global_step=step)
-        if self.use_wandb:
-            self._set_wandb_state(step, epoch)
-            self._wandb_tmp.update({f"p/{figure_name}": wandb.Image(figure)})
+        # if self.use_tb:
+        #     self.writer.add_figure(tag=figure_name, figure=figure, global_step=step)
+        # if self.use_wandb:
+        #     self._set_wandb_state(step, epoch)
+        #     self._wandb_tmp.update({f"p/{figure_name}": wandb.Image(figure)})
         plt.close(figure)
 
     # def log_test_metrics(
