@@ -1,0 +1,39 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.watcherExclude": {
+            "**/venv": true,
+            "**/__pycache__": true,
+        },
+        "[python]": {
+            "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "editor.formatOnSave": true,
+        "files.exclude": {
+            "**/venv": true,
+            "**/__pycache__": true
+        }
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "args": [
+                    "--hash",
+                    "fea87f9",
+                    "test"
+                ],
+                // "cwd": "/home/mscham/fgsim",
+                // "justMyCode": false,
+                "module": "fgsim",
+                "name": "hash",
+                "request": "launch",
+                "type": "python"
+            },
+        ]
+    },
+}
