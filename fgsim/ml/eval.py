@@ -3,7 +3,8 @@ from torch_geometric.data import Batch
 from tqdm import tqdm
 
 from fgsim.config import conf, device
-from fgsim.io.sel_loader import scaler
+from fgsim.loaders import postprocess as dataset_postprocess
+from fgsim.loaders import scaler
 from fgsim.ml.holder import Holder
 from fgsim.monitoring import logger
 from fgsim.plot.eval_plots import eval_plots
@@ -67,24 +68,7 @@ def postprocess(batch: Batch, sim_or_gen: str) -> Batch:
         batch.y_scaled = batch.y.clone()
         batch.y = scaler.inverse_transform(batch.y, "y")
 
-    if conf.dataset_name == "jetnet":
-        from jetnet.utils import jet_features
-
-        from fgsim.utils.jetnetutils import to_stacked_mask
-
-        if len({"kpd", "fgd"} & set(conf.training.val.metrics)):
-            from fgsim.utils.jetnetutils import to_efp
-
-            batch = to_efp(batch)
-        for k, v in jet_features(
-            to_stacked_mask(batch).cpu().numpy()[..., :3]
-        ).items():
-            batch[k] = v
-
-    if conf.dataset_name == "calochallange":
-        from fgsim.loaders.calochallange import postprocess
-
-        batch = postprocess(batch, sim_or_gen)
+    batch = dataset_postprocess(batch)
     return batch
 
 

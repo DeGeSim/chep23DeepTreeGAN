@@ -11,7 +11,7 @@ import numpy as np
 import torch
 
 from fgsim.config import conf, device
-from fgsim.loaders.jetnet import JetNetDS as QueuedDataset
+from fgsim.loaders import Dataset as QueuedDataset
 from fgsim.ml.eval import eval_res_d, gen_res_from_sim_batches
 from fgsim.ml.holder import Holder
 from fgsim.monitoring import logger

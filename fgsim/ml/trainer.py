@@ -4,7 +4,7 @@ import torch
 from tqdm import tqdm
 
 from fgsim.config import conf, device
-from fgsim.loaders.jetnet import JetNetDS as QueuedDataset
+from fgsim.loaders import Dataset as QueuedDataset
 from fgsim.ml.early_stopping import early_stopping
 from fgsim.ml.holder import Holder
 from fgsim.ml.validation import validate

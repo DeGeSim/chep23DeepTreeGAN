@@ -4,7 +4,7 @@ from .readin import file_manager, read_chunks
 from .scaler import scaler
 
 
-class JetNetDS(BaseDS):
+class Dataset(BaseDS):
     def __init__(self):
         super().__init__(file_manager)
 
