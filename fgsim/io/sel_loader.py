@@ -1,13 +1,14 @@
 import importlib
-# from typing import List, Type
 
 from fgsim.config import conf
+
+# from typing import List, Type
+
+
 # from fgsim.io.loader import LoaderInfo
 
 # Import the specified processing sequence
-scaler = importlib.import_module(
-    f"fgsim.loaders.{conf.dataset_name}"
-).scaler
+scaler = importlib.import_module(f"fgsim.datasets.{conf.dataset_name}").scaler
 
 
 # file_manager = loader_info.file_manager

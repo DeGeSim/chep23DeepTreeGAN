@@ -237,7 +237,7 @@ class Holder:
         # rotate alpha without changing the distribution for the evaulation
         batch = batch.clone()
         # if conf.dataset_name == "calochallange":
-        #     from fgsim.loaders.calochallange.alpharot import rotate_alpha
+        #     from fgsim.datasets.calochallange.alpharot import rotate_alpha
 
         #     alphapos = conf.loader.x_features.index("alpha")
         #     batch.x[..., alphapos] = rotate_alpha(
@@ -247,7 +247,7 @@ class Holder:
 
     def postprocess(self, batch: Batch) -> Batch:
         if conf.dataset_name == "jetnet" and conf.loader.n_points == 150:
-            from fgsim.loaders.jetnet.readin import norm_pt_sum
+            from fgsim.datasets.jetnet.readin import norm_pt_sum
 
             pt_pos = conf.loader.x_ftx_energy_pos
             pts = batch.x[..., pt_pos].clone()

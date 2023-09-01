@@ -3,8 +3,8 @@ from torch_geometric.data import Batch
 from tqdm import tqdm
 
 from fgsim.config import conf, device
-from fgsim.loaders import postprocess as dataset_postprocess
-from fgsim.loaders import scaler
+from fgsim.datasets import postprocess as dataset_postprocess
+from fgsim.datasets import scaler
 from fgsim.ml.holder import Holder
 from fgsim.monitoring import logger
 from fgsim.plot.eval_plots import eval_plots
