@@ -69,7 +69,8 @@ class SubNetworkLoss:
                     )
             else:
                 raise Exception
-        check_tensor(losses_dict)
+        for v in losses_dict.values():
+            check_tensor(v)
 
         partloss: torch.Tensor = sum(losses_dict.values())
         if conf.models[self.name].retain_graph_on_backprop:

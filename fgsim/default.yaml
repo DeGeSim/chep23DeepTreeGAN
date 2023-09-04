@@ -123,6 +123,7 @@ model_param_options:
         n_cond: 1 # ${len:${loader.y_features}}
         pruning: "cut"
         equivar: True
+        sample_until_full: False
         branching_param:
             residual: True
             final_linear: True

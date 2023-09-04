@@ -37,7 +37,8 @@ def setup_procedure() -> str:
         dirs_exist_ok=True,
     )
 
-    return conf.hash
+    print(f"Experiment setup with hash {conf.hash}.")
+    return
 
 
 def filter_paths(d, f):

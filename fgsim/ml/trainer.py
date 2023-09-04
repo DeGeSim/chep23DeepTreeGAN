@@ -41,7 +41,7 @@ class Trainer:
 
     def train_epoch(self):
         self.pre_epoch()
-        tbar = tqdm(self.loader.qfseq, **self.tqdmkw())
+        tbar = tqdm(self.loader.training_batches, **self.tqdmkw())
         for batch in tbar:
             step = self.holder.state.grad_step
             if step % self.val_interval == 0 and step != 0:
@@ -153,10 +153,11 @@ class Trainer:
 
     def tqdmkw(self):
         kws = dict()
+        n_grad_steps_per_epoch = self.loader.chunk_manager.n_grad_steps_per_epoch
         kws["initial"] = (
             self.holder.state.processed_events
             // conf.loader.batch_size
-            % self.loader.n_grad_steps_per_epoch
+            % n_grad_steps_per_epoch
         )
         if conf.debug:
             kws["miniters"] = 5
@@ -167,6 +168,6 @@ class Trainer:
         else:
             kws["miniters"] = 1000
             kws["mininterval"] = 20.0
-        kws["total"] = self.loader.n_grad_steps_per_epoch
+        kws["total"] = n_grad_steps_per_epoch
         kws["desc"] = f"Epoch {self.holder.state.epoch}"
         return kws
