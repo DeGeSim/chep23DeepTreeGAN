@@ -5,7 +5,6 @@ from shutil import copytree
 from omegaconf import OmegaConf
 
 from fgsim.config import conf, hyperparameters
-from fgsim.monitoring.monitor import setup_experiment
 
 
 def gethash_procedure() -> None:
@@ -38,7 +37,6 @@ def setup_procedure() -> str:
         dirs_exist_ok=True,
     )
 
-    setup_experiment()
     return conf.hash
 
 

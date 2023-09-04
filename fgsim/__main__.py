@@ -1,20 +1,26 @@
 """Main module."""
-import importlib
 import os
 import sys
-from pathlib import Path
 
 # Add the project to the path, -> `import fgsim.x`
 sys.path.append(os.path.dirname(os.path.realpath(".")))
 
+
 def main():
     import fgsim.config
+
     (
         fgsim.config.conf,
         fgsim.config.hyperparameters,
     ) = fgsim.config.parse_arg_conf()
     from fgsim.config import conf
     from fgsim.monitoring.logger import init_logger, logger
+
+    if conf.command == "setup":
+        from fgsim.commands.setup import setup_procedure
+
+        setup_procedure()
+        exit()
 
     init_logger()
     logger.info(
@@ -32,9 +38,9 @@ def main():
 
         test_procedure()
 
-
     else:
         raise Exception
+
 
 if __name__ == "__main__":
     main()

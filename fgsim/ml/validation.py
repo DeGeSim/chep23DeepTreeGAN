@@ -24,16 +24,6 @@ def validate(holder: Holder, loader) -> None:
         None,
     )
 
-    # # overwrite the recorded score for each val step
-    # import wandb
-    # for ivalstep in range(len(score)):
-    #     scoreistep = ivalstep * conf.training.val.interval
-    #     wandb.log(
-    #         {"trend/score": score[ivalstep]},
-    #         step=scoreistep,
-    #         epoch=scoreistep // loader.n_grad_steps_per_epoch,
-    #     )
-
     # save the best model
     if max(holder.history["score"]) == holder.history["score"][-1]:
         holder.state.best_step = holder.state["grad_step"]

@@ -4,9 +4,6 @@ import signal
 import sys
 import traceback
 
-from queueflow import Sequence
-
-import wandb
 from fgsim.config import conf, device
 from fgsim.ml import Holder, Trainer
 from fgsim.monitoring import logger
@@ -40,7 +37,7 @@ def training_procedure() -> None:
 
 
 class SigTermHander:
-    def __init__(self, holder: Holder, qfseq: Sequence) -> None:
+    def __init__(self, holder: Holder, qfseq) -> None:
         self.qfseq = qfseq
         self.holder = holder
         signal.signal(signal.SIGTERM, self.handle)
@@ -51,7 +48,5 @@ class SigTermHander:
         #  self.holder.checkpoint_manager.save_checkpoint()
         self.qfseq.stop()
         self.holder.checkpoint_manager.save_checkpoint()
-        if not conf.debug:
-            wandb.mark_preempting()
 
         exit()

@@ -21,7 +21,7 @@ models:
             params: ${scheduler_options[${models.gen.scheduler.name}]}
         retain_graph_on_backprop: True
     disc:
-        name: disc_benno_lin
+        name: disc_mp
         params: ${model_param_options[${models.disc.name}]}
         losses: "${optionlist:${loss_options},${models.disc.losses_list}}"
         losses_list: ${gan_mode_options[${training.gan_mode}][disc]}
@@ -122,7 +122,7 @@ model_param_options:
         n_global: 10
         n_cond: 1 # ${len:${loader.y_features}}
         pruning: "cut"
-        equivar: False
+        equivar: True
         branching_param:
             residual: True
             final_linear: True
@@ -241,7 +241,7 @@ training:
     checkpoint_minutes: 15
     smoothing: ${mergedefault:${dataset_options},${dataset_name},smoothing}
     log_interval: 100
-    max_epochs: 10000
+    max_epochs: 20000
     val: ${mergedefault:${dataset_options},${dataset_name},validation}
 
 path:
@@ -282,6 +282,7 @@ dataset_options:
         loader:
             rootprefix: "treeMaker/tree"
             dataset_glob: "**/*.root"
+            eval_glob: null
             preprocess_training: True
             chunk_size: 1000
             batch_size: 200
@@ -307,13 +308,13 @@ dataset_options:
             use_for_stopping: ['w1m','w1p','fpnd']
             metrics: ['w1m','w1p','fpnd','auc',"w1disc"]
         loader:
-            dataset_path: "~/fgsim/data/jetnet"
+            dataset_path: "data/jetnet"
             n_points: 30
             x_features: ["etarel", "phirel", "ptrel"]
             y_features: ["type","pt", "eta", "mass", "num_particles"]
             x_ftx_energy_pos: 2
-            cond_gen_features: [False, False, False, False, False]
-            cond_critic_features: [False, True, True, True, False]
+            cond_gen_features: [False, False, False, False, True]
+            cond_critic_features: [True, True, True, True, True]
             jettype: "t"
             chunk_size: 5000
             batch_size: 200

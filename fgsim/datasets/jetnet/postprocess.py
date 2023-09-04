@@ -9,6 +9,9 @@ def postprocess(batch):
         from fgsim.datasets.jetnet.utils import to_efp
 
         batch = to_efp(batch)
-    for k, v in jet_features(to_stacked_mask(batch).cpu().numpy()[..., :3]).items():
-        batch[k] = v
+    if "hlv" not in batch:
+        batch["hlv"] = {}
+    jn_dict = jet_features(to_stacked_mask(batch).cpu().numpy()[..., :3])
+    for k, v in jn_dict.items():
+        batch["hlv"][k] = v
     return batch
