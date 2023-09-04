@@ -22,8 +22,8 @@ class Trainer:
             if conf.debug
             else conf.training.val.interval
         )
-        # log_model(holder)
-        logger.info(f"Device: {torch.cuda.get_device_name()}")
+        if torch.cuda.is_available():
+            logger.info(f"Device: {torch.cuda.get_device_name()}")
 
     def training_loop(self):
         max_epochs = conf.training.max_epochs
