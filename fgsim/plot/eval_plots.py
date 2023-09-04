@@ -7,31 +7,26 @@ from .ratioplot import ratioplot
 
 
 def eval_plots(fig_logger: FigLogger, res: dict):
-    fig_logger.prefixes.append("unscaled")
-    make_1d_plots(res, fig_logger, "x")
-    make_1d_plots(res, fig_logger, "x", True)
-    make_2d_plots(res, fig_logger, "x")
-    make_2d_plots(res, fig_logger, "x", True)
-    fig_logger.prefixes.pop()
+    make_1d_plots(res, fig_logger, False)
+    make_1d_plots(res, fig_logger, False, True)
+    make_2d_plots(res, fig_logger, False)
+    make_2d_plots(res, fig_logger, False, True)
 
-    # if conf.dataset_name == "calochallange":
-    #     fig_logger.prefixes.append("scaled")
-    #     make_1d_plots(res, fig_logger, "x_scaled")
-    #     make_2d_plots(res, fig_logger, "x_scaled")
-    #     fig_logger.prefixes.pop()
+    if conf.dataset_name == "calochallange":
+        fig_logger.prefixes.append("scaled")
+        make_1d_plots(res, fig_logger, "x_scaled")
+        make_2d_plots(res, fig_logger, "x_scaled")
+        fig_logger.prefixes.pop()
 
     make_high_level_plots(res, fig_logger)
-
-    # if conf.dataset_name == "jetnet":
-    #     make_jetnet_plots(res, fig_logger)
-
     make_critics_plots(res, fig_logger)
 
 
 def make_1d_plots(
-    res: dict, fig_logger: FigLogger, ftxname: str, energy_weighted=False
+    res: dict, fig_logger: FigLogger, scaled: bool, energy_weighted=False
 ) -> None:
-    fig_logger.prefixes.append("1D")
+    ftxname = "x_scaled" if scaled else "x"
+    fig_logger.prefixes.append("1D_" + ("scaled" if scaled else "unscaled"))
     if "unscaled" in fig_logger.prefixes:
         bins = [var_to_bins(e) for e in conf.loader.x_features]
     else:
@@ -45,36 +40,32 @@ def make_1d_plots(
 
 def make_high_level_plots(res: dict, fig_logger: FigLogger) -> None:
     fig_logger.prefixes.append("HLV")
-    metrics = [e for e in conf.training.val.metrics if "marginal" not in e]
+    metrics = res["sim_batch"]["hlv"].keys()
     metric_dict = {}
     for mname in metrics:
-        if mname not in res["sim_batch"]:
-            continue
-        simobj = res["sim_batch"][mname]
-        if isinstance(simobj, dict):
-            for smname in simobj.keys():
+        sim_obj = res["sim_batch"]["hlv"][mname]
+        gen_obj = res["gen_batch"]["hlv"][mname]
+        if isinstance(sim_obj, dict):
+            for smname in sim_obj.keys():
                 metric_dict[f"{mname}_{smname}"] = (
-                    res["sim_batch"][mname][smname],
-                    res["gen_batch"][mname][smname],
+                    sim_obj[smname],
+                    gen_obj[smname],
                 )
         else:
-            metric_dict[mname] = (res["sim_batch"][mname], res["gen_batch"][mname])
+            metric_dict[mname] = (sim_obj, gen_obj)
 
     for ftn, (sim_arr, gen_arr) in metric_dict.items():
-        fig = ratioplot(
-            sim=sim_arr.cpu().numpy(),
-            gen=gen_arr.cpu().numpy(),
-            title=var_to_label(ftn),
-        )
+        fig = ratioplot(sim=sim_arr, gen=gen_arr, title=var_to_label(ftn))
         fig_logger(fig, f"hlv_{ftn}.pdf")
 
     fig_logger.prefixes.pop()
 
 
 def make_2d_plots(
-    res: dict, fig_logger: FigLogger, ftxname: str, energy_weighted=False
+    res: dict, fig_logger: FigLogger, scaled: bool, energy_weighted=False
 ) -> None:
-    fig_logger.prefixes.append("2D")
+    ftxname = "x_scaled" if scaled else "x"
+    fig_logger.prefixes.append("2D_" + ("scaled" if scaled else "unscaled"))
     epos = conf.loader.x_ftx_energy_pos
     ename = conf.loader.x_features[epos]
 
@@ -151,16 +142,4 @@ def make_critics_plots(res: dict, fig_logger: FigLogger) -> None:
             fig,
             f"critic{icritic}.pdf",
         )
-    fig_logger.prefixes.pop()
-
-
-def make_jetnet_plots(res: dict, fig_logger: FigLogger) -> None:
-    fig_logger.prefixes.append("jetnet")
-    from fgsim.plot.jetfeatures import jet_features
-
-    for title, fig in jet_features(
-        res["sim_batch"],
-        res["gen_batch"],
-    ).items():
-        fig_logger(fig, title)
     fig_logger.prefixes.pop()

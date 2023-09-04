@@ -75,12 +75,10 @@ def hist2d(
     if step is not None:
         title += f"\nStep {step}"
     fig.suptitle(title)
-    fig.tight_layout()
 
     cax = make_axes_locatable(plt.gca()).append_axes("right", "5%", pad="3%")
 
     fig.colorbar(mesh, cax)
-    fig.tight_layout()
     # fig.savefig("wd/fig.pdf")
     return fig
 

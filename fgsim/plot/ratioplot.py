@@ -26,6 +26,13 @@ def ratioplot(
     sim_error = np.sqrt(sim_hist)
     gen_error = np.sqrt(gen_hist)
 
+    scale_factor = int(np.floor(np.log10(max(sim_hist.max(), gen_hist.max()))))
+
+    sim_hist = sim_hist * (10**scale_factor)
+    gen_hist = gen_hist * (10**scale_factor)
+    sim_error = sim_error * (10**scale_factor)
+    gen_error = gen_error * (10**scale_factor)
+
     plt.close("all")
     ax: Axes
     axrat: Axes
@@ -49,21 +56,21 @@ def ratioplot(
         ax.vlines(
             x=bins[0] - factor * delta,
             ymin=0,
-            ymax=(arr < bins[0]).sum(),
+            ymax=(arr < bins[0]).sum() * (10**scale_factor),
             color=color,
             **kwstyle,
         )
         ax.vlines(
             x=bins[-1] + factor * delta,
             ymin=0,
-            ymax=(arr > bins[-1]).sum(),
+            ymax=(arr > bins[-1]).sum() * (10**scale_factor),
             color=color,
             **kwstyle,
         )
 
     if (sim_hist > (sim_hist.max() / 10)).mean() < 0.1:
         ax.set_yscale("log")
-    ax.set_ylabel("Frequency", fontsize=16)
+    ax.set_ylabel(f"Counts/Bin [$10^{scale_factor}$]", fontsize=16)
 
     ax.legend(fontsize=16, loc="best")
     ax.tick_params(axis="both", which="major", labelsize=12)
@@ -91,7 +98,7 @@ def ratioplot(
         markersize=2,
     )
 
-    axrat.set_ylim(0.5, 1.5)
+    axrat.set_ylim(0.0, 1.52)
     axrat.xaxis.tick_top()
     for iax in [ax, axrat]:
         for spline in iax.spines.values():
@@ -99,7 +106,7 @@ def ratioplot(
             spline.set_color("black")
     if simw is not None:
         title += " weighted"
-    fig.suptitle(title, fontsize=23)
+    fig.suptitle(title, fontsize=28)
     plt.tight_layout()
     # fig.savefig("wd/fig.pdf")
     return fig
