@@ -300,6 +300,11 @@ dataset_options:
             x_features: ["foo"]
             x_ftx_energy_pos: 0
             y_features: ["num_particles"]
+        metrics:
+            debug: []
+            stopping: []
+            test: []
+            val: []
     jetnet:
         tree:
             branches: [2,3,5]
@@ -319,3 +324,8 @@ dataset_options:
             jettype: "t"
             chunk_size: 5000
             batch_size: 200
+        metrics:
+            debug: ["w1m"]
+            stopping: ["w1m","w1p","fpnd"]
+            test: ["w1m","w1p","w1efp","fpnd"]
+            val: ["w1m","w1p","fpnd","auc","w1disc"]

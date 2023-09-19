@@ -10,7 +10,8 @@ import torch
 from omegaconf import DictConfig
 
 from fgsim.config import conf
-from fgsim.monitoring import MetricAggregator, TrainLog, logger
+from fgsim.monitoring import MetricAggregator, TrainLog
+from fgsim.monitoring.logger import logger
 
 
 class EvaluationMetrics:
@@ -24,14 +25,18 @@ class EvaluationMetrics:
         self.train_log = train_log
         self.parts: Dict[str, Callable] = {}
         self._lastlosses: Dict[str, List[float]] = {}
-        self.metric_aggr = MetricAggregator()
+        self.metric_aggr_val = MetricAggregator()
+        self.metric_aggr_test = MetricAggregator()
         self.history = history
 
-        metrics = (
-            conf.training.val.debug_metrics
-            if conf.debug
-            else conf.training.val.metrics
-        )
+        if conf.command == "train":
+            if conf.debug:
+                metrics = conf.loader.metrics.debug
+            else:
+                metrics = conf.loader.metrics.val
+        elif conf.command == "test":
+            metrics = conf.loader.metrics.test
+
         for metric_name in metrics:
             assert metric_name != "parts"
             # params = metric_conf if metric_conf is not None else DictConfig({})
@@ -63,7 +68,12 @@ class EvaluationMetrics:
                 else:
                     mval[metric_name] = comp_metrics
 
-        self.metric_aggr.append_dict(mval)
+        metric_aggr = (
+            self.metric_aggr_val
+            if conf.command == "train"
+            else self.metric_aggr_test
+        )
+        metric_aggr.append_dict(mval)
 
     def get_metrics(self) -> tuple[dict, list]:
         """
@@ -72,8 +82,16 @@ class EvaluationMetrics:
         """
         # Call metric_aggr to aggregate the collected metrics over the
         # validation batches.
-        up_metrics_d = self.__aggr_dists(self.metric_aggr.aggregate())
+        metric_aggr = (
+            self.metric_aggr_val
+            if conf.command == "train"
+            else self.metric_aggr_test
+        )
+        up_metrics_d = self.__aggr_dists(metric_aggr.aggregate())
 
+        if conf.command != "train":
+            logger.info(up_metrics_d)
+            return up_metrics_d, None
         for metric_name, metric_val in up_metrics_d.items():
             val_metric_hist = self.history["val"][metric_name]
             val_metric_hist.append(metric_val)
@@ -93,9 +111,10 @@ class EvaluationMetrics:
 
     def __aggr_dists(self, md):
         for dname in ["cdf", "sw1", "histd"]:
-            md[f"dmean_{dname}"] = float(
-                np.nanmean([v for k, v in md.items() if k.endswith(dname)])
-            )
+            if any([k.endswith(dname) for k in md.keys()]):
+                md[f"dmean_{dname}"] = float(
+                    np.nanmean([v for k, v in md.items() if k.endswith(dname)])
+                )
         return md
 
     def __compute_score_per_val(self, up_metrics_d):
@@ -106,7 +125,7 @@ class EvaluationMetrics:
         val_metrics_names = [
             k
             for k in up_metrics_d.keys()
-            if any([k.startswith(mn) for mn in conf.training.val.use_for_stopping])
+            if any([k.startswith(mn) for mn in conf.loader.metrics.stopping])
         ]
 
         # for the following, all recordings need to have the same
