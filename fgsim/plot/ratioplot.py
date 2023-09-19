@@ -5,6 +5,7 @@ import mplhep
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
+from matplotlib.ticker import ScalarFormatter
 
 from .binborders import binborders_wo_outliers, bincenters
 
@@ -26,12 +27,12 @@ def ratioplot(
     sim_error = np.sqrt(sim_hist)
     gen_error = np.sqrt(gen_hist)
 
-    scale_factor = int(np.floor(np.log10(max(sim_hist.max(), gen_hist.max()))))
+    scale_factor = 1  # int(np.floor(np.log10(max(sim_hist.max(), gen_hist.max()))))
 
-    sim_hist = sim_hist * (10**scale_factor)
-    gen_hist = gen_hist * (10**scale_factor)
-    sim_error = sim_error * (10**scale_factor)
-    gen_error = gen_error * (10**scale_factor)
+    sim_hist = sim_hist * (10**-scale_factor)
+    gen_hist = gen_hist * (10**-scale_factor)
+    sim_error = sim_error * (10**-scale_factor)
+    gen_error = gen_error * (10**-scale_factor)
 
     plt.close("all")
     ax: Axes
@@ -56,25 +57,31 @@ def ratioplot(
         ax.vlines(
             x=bins[0] - factor * delta,
             ymin=0,
-            ymax=(arr < bins[0]).sum() * (10**scale_factor),
+            ymax=(arr < bins[0]).sum() * (10**-scale_factor),
             color=color,
             **kwstyle,
         )
         ax.vlines(
             x=bins[-1] + factor * delta,
             ymin=0,
-            ymax=(arr > bins[-1]).sum() * (10**scale_factor),
+            ymax=(arr > bins[-1]).sum() * (10**-scale_factor),
             color=color,
             **kwstyle,
         )
 
     if (sim_hist > (sim_hist.max() / 10)).mean() < 0.1:
         ax.set_yscale("log")
-    ax.set_ylabel(f"Counts/Bin [$10^{scale_factor}$]", fontsize=16)
+    else:
+        formatter = ScalarFormatter(useMathText=True)
+        formatter.set_scientific(True)
+        formatter.set_powerlimits((-1, 1))
+        ax.yaxis.set_major_formatter(formatter)
+        ax.yaxis.get_offset_text().set_fontsize(13)
+    ax.set_ylabel("Counts/Bin", fontsize=17)
 
     ax.legend(fontsize=16, loc="best")
-    ax.tick_params(axis="both", which="major", labelsize=12)
-    ax.tick_params(axis="both", which="minor", labelsize=10)
+    ax.tick_params(axis="both", which="major", labelsize=14)
+    ax.tick_params(axis="both", which="minor", labelsize=11)
 
     # ratioplot
     with np.errstate(divide="ignore", invalid="ignore"):

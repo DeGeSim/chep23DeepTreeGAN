@@ -134,8 +134,8 @@ def make_critics_plots(res: dict, fig_logger: FigLogger) -> None:
         )
     ):
         fig = ratioplot(
-            sim=sim_crit.reshape(-1),
-            gen=gen_crit.reshape(-1),
+            sim=sim_crit.reshape(-1).cpu().numpy(),
+            gen=gen_crit.reshape(-1).cpu().numpy(),
             title=f"Critic #{icritic} Score",
         )
         fig_logger(
