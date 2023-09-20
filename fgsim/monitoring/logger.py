@@ -31,6 +31,7 @@ def init_logger():
             file_handler = RotatingFileHandler(filename=log_path, backupCount=10)
             file_handler.setFormatter(format)
             file_handler.setLevel(logging.DEBUG)
+            file_handler.doRollover()
             logger.addHandler(file_handler)
 
         # qf logger
