@@ -27,23 +27,30 @@
                     "fea87f9",
                     "test"
                 ],
-                // "cwd": "/home/mscham/fgsim",
-                // "justMyCode": false,
                 "module": "fgsim",
-                "name": "hash",
+                "name": "test t",
                 "request": "launch",
                 "type": "python"
             },
             {
                 "args": [
                     "--hash",
-                    "5b4421b",
+                    "a6e035a",
+                    "test"
+                ],
+                "module": "fgsim",
+                "name": "test q",
+                "request": "launch",
+                "type": "python"
+            },
+            {
+                "args": [
+                    "--hash",
+                    "3d60891",
                     "train"
                 ],
-                // "cwd": "/home/mscham/fgsim",
-                // "justMyCode": false,
                 "module": "fgsim",
-                "name": "newtrain",
+                "name": "test g",
                 "request": "launch",
                 "type": "python"
             },
@@ -56,7 +63,7 @@
                 // "cwd": "/home/mscham/fgsim",
                 // "justMyCode": false,
                 "module": "fgsim",
-                "name": "setup",
+                "name": "t retrain",
                 "request": "launch",
                 "type": "python"
             },
