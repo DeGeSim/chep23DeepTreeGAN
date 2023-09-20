@@ -66,7 +66,7 @@ def fpnd(gen_batch: Batch, **kwargs) -> float:
 
     try:
         score = jetnet.evaluation.gen_metrics.fpnd(
-            jets=highptjets[:num_eval_samples],
+            jets=highptjets,
             jet_type=conf.loader.jettype,
             use_tqdm=False,
         )
