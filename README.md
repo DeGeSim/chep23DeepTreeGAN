@@ -14,7 +14,7 @@ $ python -m fgsim --hash 3d60891 train # gluons
 ~~~
 
 ~~~
-❯python -m fgsim --hash fea87f9 test
+$ python -m fgsim --hash fea87f9 test
 23-09-20 14:38 INFO   tag: uc_t_dmp hash: fea87f9 loader_hash: 860c256
          INFO   Running command test
          WARNING  Loaded model from checkpoint at epoch 10014 grad_step 5758045.
@@ -39,8 +39,28 @@ $ python -m fgsim --hash 3d60891 train # gluons
 
 Retrain the models:
 ~~~bash
-$ bash setup_venv.sh
-> Experiment setup with hash 1f62bc2.
-$ python -m fgsim --hash 1f62bc2 train
-> ...
+$ python -m fgsim --tag t_retrain setup
+> Experiment setup with hash 8dea68a.
+$ python -m fgsim --hash 8dea68a train
+>
+23-09-20 15:39 INFO   tag: t_retrain hash: 8dea68a loader_hash: 0d09873
+           INFO   Running command train
+           WARNING  Proceeding without loading checkpoint.
+           WARNING  Starting with state epoch: 0
+                processed_events: 0
+                grad_step: 0
+                complete: false
+           INFO   Using the first 50 batches for validation and the next 250 batches for testing.
+           INFO   Device: Tesla V100-SXM2-32GB
+           INFO   Validating
+Generating eval batches: 100%|████████████████████████████████████████████████████████| 50/50 [00:06<00:00,  8.04it/s]
+           INFO   Postprocessing
+           INFO   Postprocessing done
+           INFO   w1m 118.82    w1p 42.76     fpnd 198.90   auc 0.03      w1disc 1.24
+           WARNING  New best model at step 0
+WARNING:fgsim:New best model at step 0
+Epoch 0:   4%|████▏                                                                   | 589/14725 [00:51<20:30, 11.49it/s]
+Epoch 1:   8%|████████▎                                                               | 1178/14725 [00:46<17:50, 12.65it/s]
+Epoch 2:  12%|████████████▍                                                           | 1767/14725 [00:44<16:08, 13.37it/s]
+Epoch 3:  14%|██████████████
 ~~~
