@@ -30,11 +30,11 @@ class EvaluationMetrics:
 
         if conf.command == "train":
             if conf.debug:
-                metrics = conf.loader.metrics.debug
+                metrics = conf.metrics.debug
             else:
-                metrics = conf.loader.metrics.val
+                metrics = conf.metrics.val
         elif conf.command == "test":
-            metrics = conf.loader.metrics.test
+            metrics = conf.metrics.test
 
         for metric_name in metrics:
             assert metric_name != "parts"
@@ -69,7 +69,10 @@ class EvaluationMetrics:
 
         if conf.command == "train":
             self.metric_aggr_val.append_dict(
-                {k: v[0] if len(v) == 2 else v for k, v in mval.items()}
+                {
+                    k: v[0] if isinstance(v, tuple) and len(v) == 2 else v
+                    for k, v in mval.items()
+                }
             )
         else:
             self.test_md = mval
@@ -122,7 +125,7 @@ class EvaluationMetrics:
         val_metrics_names = [
             k
             for k in up_metrics_d.keys()
-            if any([k.startswith(mn) for mn in conf.loader.metrics.stopping])
+            if any([k.startswith(mn) for mn in conf.metrics.stopping])
         ]
 
         # for the following, all recordings need to have the same

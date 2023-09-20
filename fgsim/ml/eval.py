@@ -80,7 +80,7 @@ def eval_res_d(
     mode: list["str"],
     plot_path=None,
 ):
-    plot = step % conf.training.val.plot_interval == 0 or conf.command == "test"
+    plot = step % conf.training.plot_interval == 0 or conf.command == "test"
     # plot = True
 
     # evaluate the validation metrics

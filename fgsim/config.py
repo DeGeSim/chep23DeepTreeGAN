@@ -113,8 +113,8 @@ def parse_arg_conf(args=None):
                 raise FileNotFoundError(f"Tag {args.tag} has no conf.yaml file.")
         conf, hyperparameters = compute_conf(defaultconf, tagconf, vars(args))
     if conf.debug:
-        conf.loader.metrics.val = [conf.loader.metrics.val[0]]
-        conf.loader.metrics.stopping = conf.loader.metrics.val
+        conf.metrics.val = [conf.metrics.val[0]]
+        conf.metrics.stopping = conf.metrics.val
     return conf, hyperparameters
 
 

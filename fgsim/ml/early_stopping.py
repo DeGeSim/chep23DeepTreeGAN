@@ -53,7 +53,7 @@ def early_stopping(holder) -> bool:
     return all(
         [
             is_minimized(np.array(history["val"][metric]))
-            for metric in conf.loader.metrics.stopping
+            for metric in conf.metrics.stopping
         ]
     )
 

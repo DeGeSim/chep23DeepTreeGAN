@@ -5,7 +5,7 @@ from fgsim.datasets.jetnet.utils import to_stacked_mask
 
 
 def postprocess(batch):
-    if len({"kpd", "fgd"} & set(conf.loader.metrics.val)):
+    if len({"kpd", "fgd"} & set(conf.metrics.val)):
         from fgsim.datasets.jetnet.utils import to_efp
 
         batch = to_efp(batch)

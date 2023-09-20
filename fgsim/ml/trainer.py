@@ -17,11 +17,8 @@ class Trainer:
         self.train_log: TrainLog = self.holder.train_log
 
         self.loader: QueuedDataset = QueuedDataset()
-        self.val_interval = (
-            conf.training.val.debug_interval
-            if conf.debug
-            else conf.training.val.interval
-        )
+        self.val_interval = conf.training.val_interval
+
         if torch.cuda.is_available():
             logger.info(f"Device: {torch.cuda.get_device_name()}")
 
