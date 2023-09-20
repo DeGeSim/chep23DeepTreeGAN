@@ -61,5 +61,5 @@ class FigLogger:
             step=self.step,
             epoch=self.epoch,
         )
-        logger.info(filename)
+        logger.debug(filename)
         plt.close(figure)
