@@ -26,7 +26,6 @@ class EvaluationMetrics:
         self.parts: Dict[str, Callable] = {}
         self._lastlosses: Dict[str, List[float]] = {}
         self.metric_aggr_val = MetricAggregator()
-        self.metric_aggr_test = MetricAggregator()
         self.history = history
 
         if conf.command == "train":
@@ -68,12 +67,12 @@ class EvaluationMetrics:
                 else:
                     mval[metric_name] = comp_metrics
 
-        metric_aggr = (
-            self.metric_aggr_val
-            if conf.command == "train"
-            else self.metric_aggr_test
-        )
-        metric_aggr.append_dict(mval)
+        if conf.command == "train":
+            self.metric_aggr_val.append_dict(
+                {k: v[0] if len(v) == 2 else v for k, v in mval.items()}
+            )
+        else:
+            self.test_md = mval
 
     def get_metrics(self) -> tuple[dict, list]:
         """
@@ -82,16 +81,14 @@ class EvaluationMetrics:
         """
         # Call metric_aggr to aggregate the collected metrics over the
         # validation batches.
-        metric_aggr = (
-            self.metric_aggr_val
-            if conf.command == "train"
-            else self.metric_aggr_test
-        )
-        up_metrics_d = self.__aggr_dists(metric_aggr.aggregate())
-
-        if conf.command != "train":
+        if conf.command == "test":
+            up_metrics_d = self.test_md
             logger.info(up_metrics_d)
             return up_metrics_d, None
+
+        # score calculatation if during training
+        up_metrics_d = self.__aggr_dists(self.metric_aggr_val.aggregate())
+
         for metric_name, metric_val in up_metrics_d.items():
             val_metric_hist = self.history["val"][metric_name]
             val_metric_hist.append(metric_val)
