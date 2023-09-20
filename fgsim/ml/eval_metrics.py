@@ -92,16 +92,18 @@ class EvaluationMetrics:
         # score calculatation if during training
         up_metrics_d = self.__aggr_dists(self.metric_aggr_val.aggregate())
 
+        logstr = ""
         for metric_name, metric_val in up_metrics_d.items():
             val_metric_hist = self.history["val"][metric_name]
             val_metric_hist.append(metric_val)
 
-            logstr = f"Validation: {metric_name} {val_metric_hist[-1]:.2f} "
+            logstr += f"{metric_name} {val_metric_hist[-1]:.2f}"
             if len(val_metric_hist) > 1:
                 logstr += (
                     f"(Δ{(val_metric_hist[-1]/val_metric_hist[-2]-1)*100:+.0f}%)"
                 )
-            logger.info(logstr)
+            logstr += "  "
+        logger.info(logstr)
         if conf.debug:
             return dict(), list()
 
