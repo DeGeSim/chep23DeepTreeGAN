@@ -3,7 +3,7 @@ Repository for https://arxiv.org/abs/2311.12616
 
 
 Successor Model:
-https://arxiv.org/abs/2312.00042  https://github.com/DeGeSim/nips23DeepTreeGANv2
+[arxiv](https://arxiv.org/abs/2312.00042) [Repository](https://github.com/DeGeSim/nips23DeepTreeGANv2)
 
 
 ## Usage
